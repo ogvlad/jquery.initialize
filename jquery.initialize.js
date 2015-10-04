@@ -38,9 +38,7 @@
                     //if child list, lets add all addedNodes
                     if ( mutation.type == "childList" && mutation.addedNodes.length ) {
                         $.each(mutation.addedNodes, function(i, addedNode){
-                            if ($(addedNode).is(selector)){
-                                target = target.add(addedNode);
-                            }
+                            target = target.add(addedNode);
                         });
                     }
 
@@ -48,8 +46,13 @@
                     for ( selector in $t.initData ) {
                         var inits = $t.initData[selector]; //get functions that this selector has to initialize
 
+                        //check children of elem if they match current selector
+                        var toInit = target.find(selector);
+                        //also check item itself, if it's good, add to set
+                        if ( target.is(selector) ) toInit = toInit.add(target);
+
                         //for each item that match selector and is in mutated area
-                        target.each(function(){
+                        toInit.each(function(){
                             var toInitSingle = this;
                             //create list of called inits if no list yet
                             toInitSingle.initsCalled = toInitSingle.initsCalled || [];
